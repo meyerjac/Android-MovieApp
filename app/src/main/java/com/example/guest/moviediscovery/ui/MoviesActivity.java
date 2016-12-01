@@ -7,9 +7,11 @@ import android.util.Log;
 import android.widget.TextView;
 
 import com.example.guest.moviediscovery.R;
+import com.example.guest.moviediscovery.models.Movie;
 import com.example.guest.moviediscovery.services.MovieService;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -19,6 +21,7 @@ import okhttp3.Response;
 
 public class MoviesActivity extends AppCompatActivity {
     @Bind(R.id.keywordTextView) TextView mKeywordTextView;
+    private ArrayList<Movie> mMovies;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,12 +47,9 @@ public class MoviesActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                try {
-                    String jsonData = response.body().string();
-                    Log.v("log", jsonData);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+
+                mMovies = movieService.processResults(response);
+                Log.d("log", "onResponse: " + mMovies.toString());
             }
         });
     }
