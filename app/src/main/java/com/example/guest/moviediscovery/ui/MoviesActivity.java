@@ -50,6 +50,7 @@ public class MoviesActivity extends AppCompatActivity {
 
                 mMovies = movieService.processResults(response);
                 Log.d("log", "onResponse: " + mMovies.toString());
+
             }
         });
     }

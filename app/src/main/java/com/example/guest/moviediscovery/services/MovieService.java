@@ -60,8 +60,10 @@ public class MovieService {
                     String overview = thisResults.getString("overview");
                     String release_date = thisResults.getString("release_date");
 
-
+                    Movie movie = new Movie(title, poster_path, overview, release_date);
+                    movies.add(movie);
                 }
+                Log.d("log", movies.toString());
             }
         } catch (IOException e) {
             e.printStackTrace();
