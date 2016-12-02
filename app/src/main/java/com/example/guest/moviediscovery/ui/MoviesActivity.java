@@ -3,10 +3,13 @@ package com.example.guest.moviediscovery.ui;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.TextView;
 
 import com.example.guest.moviediscovery.R;
+import com.example.guest.moviediscovery.adapters.MovieListAdapter;
 import com.example.guest.moviediscovery.models.Movie;
 import com.example.guest.moviediscovery.services.MovieService;
 
@@ -20,7 +23,8 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class MoviesActivity extends AppCompatActivity {
-    @Bind(R.id.keywordTextView) TextView mKeywordTextView;
+    @Bind(R.id.recyclerView) RecyclerView mRecyclerView;
+    private MovieListAdapter mAdapter;
     private ArrayList<Movie> mMovies;
 
     @Override
@@ -32,7 +36,6 @@ public class MoviesActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String keyword = intent.getStringExtra("keyword");
         getMovies(keyword);
-        mKeywordTextView.setText("You searched for: " + keyword);
 
     }
 
@@ -50,6 +53,20 @@ public class MoviesActivity extends AppCompatActivity {
 
                 mMovies = movieService.processResults(response);
                 Log.d("log", "onResponse: " + mMovies.toString());
+
+                MoviesActivity.this.runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        mAdapter = new MovieListAdapter(getApplicationContext(), mMovies);
+                        mRecyclerView.setAdapter(mAdapter);
+                        RecyclerView.LayoutManager layoutManager =
+                                new LinearLayoutManager(MoviesActivity.this);
+                        mRecyclerView.setLayoutManager(layoutManager);
+                        mRecyclerView.setHasFixedSize(true);
+
+                    }
+                });
 
             }
         });
